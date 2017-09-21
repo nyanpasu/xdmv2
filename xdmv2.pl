@@ -1,4 +1,6 @@
+use lib './lib';
 use SDL2::Raw;
+use GL;
 
 my $title = "xdmv2";
 
@@ -9,13 +11,12 @@ my $window = SDL_CreateWindow(
   SDL_WINDOWPOS_CENTERED_MASK,
   SDL_WINDOWPOS_CENTERED_MASK,
   800, 600,
-  OPENGL
+  OPENGL,
 );
-my $renderer = SDL_CreateRenderer($window, -1, 0);
+my $ctx = SDL_GL_CreateContext($window);
 
-SDL_RenderClear($renderer);
-SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255);
-SDL_RenderPresent($renderer);
+glClearColor(0e0, 0e0, 0e0, 1e0);
+glClear(GL_COLOR_BUFFER_BIT);
 
 my $event = SDL_Event.new;
 main: loop {
@@ -26,4 +27,5 @@ main: loop {
   }
 }
 
+SDL_GL_DeleteContext($ctx);  
 SDL_Quit()
