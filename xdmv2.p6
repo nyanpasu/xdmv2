@@ -7,26 +7,38 @@ use GL;
 
 my %config = (
   title => 'xdmv2',
-  shader => './shader/white.glsl',
+  shaderFragment => './shader/white.glsl',
+  shaderVertex => './shader/vertex.glsl',
 );
 
-sub loadShader(Str $filename) {
-  my int32 $result;
-  my int32 $logLength;
+sub loadShader(Str $filename, $type) {
   my $source = CArray[Str].new([slurp $filename]);
-  my $shader = glCreateShader(GL_FRAGMENT_SHADER);
+  my $shader = glCreateShader($type);
   glShaderSource($shader, 1, $source, CArray[int32]);
   glCompileShader($shader);
+
+  my int32 $result;
+  my int32 $logLength;
   glGetShaderiv($shader, GL_COMPILE_STATUS, $result);
   glGetShaderiv($shader, GL_INFO_LOG_LENGTH, $logLength);
   if ($logLength > 0) {
     say "loadShader shader logLength > 0";
   }
 
+  return $shader;
+}
+
+sub loadProgram() {
+  my $fragmentShader = loadShader(%config<shaderFragment>, GL_FRAGMENT_SHADER);
+  my $vertexShader = loadShader(%config<shaderVertex>, GL_VERTEX_SHADER);
+
   my $program = glCreateProgram();
-  glAttachShader($program, $shader);
+  glAttachShader($program, $fragmentShader);
+  glAttachShader($program, $vertexShader);
   glLinkProgram($program);
 
+  my int32 $result;
+  my int32 $logLength;
   glGetProgramiv($program, GL_LINK_STATUS, $result);
   glGetProgramiv($program, GL_INFO_LOG_LENGTH, $logLength);
   if ($logLength > 0) {
@@ -38,8 +50,10 @@ sub loadShader(Str $filename) {
     say $log;
   }
 
-  glDetachShader($program, $shader);
-  glDeleteShader($shader);
+  glDetachShader($program, $fragmentShader);
+  glDetachShader($program, $vertexShader);
+  glDeleteShader($fragmentShader);
+  glDeleteShader($vertexShader);
 
   return $program;
 }
