@@ -27,6 +27,9 @@ sub glDeleteShader(uint32 $shader) is native(&lib) is export { * }
 sub glClearColor(num32 $red, num32 $green, num32 $blue, num32 $alpha) is native(&lib) is export { * }
 sub glClear(uint32 $mask) is native(&lib) is export { * }
 sub glUseProgram(uint32 $program)  is native(&lib) is export { * }
+sub glGetUniformLocation(uint32 $program, Str $name) returns uint32 is native(&lib) is export { * }
+sub glUniform1f(uint32 $location, num32 $value) is native(&lib) is export { * }
+sub glUniform2f(uint32 $location, num32 $v1, num32 $v2) is native(&lib) is export { * }
 
 enum GL_DEFINES is export (
   # GL_VERSION_1_1
