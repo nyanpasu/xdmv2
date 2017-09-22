@@ -22,7 +22,12 @@ sub loadShader(Str $filename, $type) {
   glGetShaderiv($shader, GL_COMPILE_STATUS, $result);
   glGetShaderiv($shader, GL_INFO_LOG_LENGTH, $logLength);
   if ($logLength > 0) {
-    say "loadShader shader logLength > 0";
+    my $buffer = CArray[uint8].new();
+    $buffer[$logLength] = 0;
+    my int32 $test = 0;
+    glGetShaderInfoLog($shader, $logLength, $test, $buffer);
+    my $log = Blob.new($buffer).decode;
+    say $log;
   }
 
   return $shader;
