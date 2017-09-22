@@ -75,14 +75,16 @@ sub main() {
   );
   my $ctx = SDL_GL_CreateContext($window);
 
-  my $shader = loadShader(%config<shader>);
+  my $program = loadProgram();
+  glUseProgram($program);
 
   my $event = SDL_Event.new;
   main: loop {
     glClearColor(0e0, 0e0, 0e0, 1e0);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     SDL_GL_SwapWindow($window);
+
     while SDL_PollEvent($event) {
       if $event.type == QUIT {
         last main;
