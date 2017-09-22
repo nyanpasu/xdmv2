@@ -1,9 +1,12 @@
 #version 330 core
 
-in vec2 fragCoord;
+uniform vec2 resolution;
+uniform float time;
+
 out vec4 fragColor;
 
 void main() {
-  vec2 uv = fragCoord.xy / iResolution.xy;
-  fragColor = vec4(uv, 0.5 + 0.5 * sin(iTime), 1.0);
+  vec4 fragCoord = gl_FragCoord;
+  vec2 uv = fragCoord.xy / resolution.xy;
+  fragColor = vec4(uv, 0.5 + 0.5 * sin(time), 1.0);
 }

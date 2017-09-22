@@ -7,7 +7,9 @@ use GL;
 
 my %config = (
   title => 'xdmv2',
-  shaderFragment => './shader/white.glsl',
+  width => 800,
+  height => 600,
+  shaderFragment => './shader/simple.glsl',
   shaderVertex => './shader/vertex.glsl',
 );
 
@@ -70,7 +72,7 @@ sub main() {
     %config<title>,
     SDL_WINDOWPOS_CENTERED_MASK,
     SDL_WINDOWPOS_CENTERED_MASK,
-    800, 600,
+    %config<width>, %config<height>,
     OPENGL,
   );
   my $ctx = SDL_GL_CreateContext($window);
@@ -78,8 +80,14 @@ sub main() {
   my $program = loadProgram();
   glUseProgram($program);
 
+  my $u_time = glGetUniformLocation($program, "time");
+  my $u_res = glGetUniformLocation($program, "resolution");
+
   my $event = SDL_Event.new;
   main: loop {
+    my num32 $time = DateTime.now.second;
+    glUniform1f($u_time, $time);
+    glUniform2f($u_res, %config<width>.Num, %config<height>.Num);
     glClearColor(0e0, 0e0, 0e0, 1e0);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
