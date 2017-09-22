@@ -2,13 +2,15 @@ use lib './lib';
 use SDL2::Raw;
 use GL;
 
-my $title = "xdmv2";
+my %config = (
+  title => 'xdmv2',
+);
 
 SDL_Init(VIDEO);
 
 sub main() {
   my $window = SDL_CreateWindow(
-    $title,
+    %config<title>,
     SDL_WINDOWPOS_CENTERED_MASK,
     SDL_WINDOWPOS_CENTERED_MASK,
     800, 600,
